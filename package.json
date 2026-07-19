@@ -8,38 +8,39 @@
   ],
   "scripts": {
     "dev": "next dev apps/web",
-    "build": "next build apps/web",
+    "build": "node scripts/build-next.mjs",
     "start": "next start apps/web",
-    "lint": "next lint apps/web",
+    "lint": "eslint apps/web --max-warnings=0",
     "typecheck": "tsc --noEmit -p apps/web/tsconfig.json",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "format": "prettier --write .",
     "verify:release": "node scripts/verify-release.mjs",
     "check:prod-env": "node scripts/check-production-env.mjs",
-    "test:unit": "vitest run"
+    "test:unit": "vitest run",
+    "build:raw": "NEXT_TELEMETRY_DISABLED=1 next build apps/web"
   },
   "dependencies": {
-    "@supabase/ssr": "latest",
-    "@supabase/supabase-js": "latest",
-    "clsx": "latest",
+    "@supabase/ssr": "0.7.0",
+    "@supabase/supabase-js": "2.52.1",
+    "clsx": "2.1.1",
     "exceljs": "^4.4.0",
-    "lucide-react": "latest",
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "zod": "latest"
+    "lucide-react": "0.468.0",
+    "next": "16.2.10",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "zod": "3.25.76"
   },
   "devDependencies": {
-    "@playwright/test": "latest",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "eslint": "latest",
-    "eslint-config-next": "latest",
-    "jsdom": "latest",
-    "prettier": "latest",
-    "typescript": "latest",
-    "vitest": "latest"
+    "@playwright/test": "1.55.1",
+    "@types/node": "22.18.6",
+    "@types/react": "19.1.16",
+    "@types/react-dom": "19.1.9",
+    "eslint": "9.36.0",
+    "eslint-config-next": "16.2.10",
+    "jsdom": "26.1.0",
+    "prettier": "3.6.2",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
   }
 }

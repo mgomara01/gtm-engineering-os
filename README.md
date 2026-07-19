@@ -172,3 +172,16 @@ The platform now includes final GA closure at `/admin/launch-certification`: blo
 ## Step 42 — Post-GA Operations and Continuous Improvement
 
 Adds adoption analytics, customer-health management, feedback governance, value-realization tracking, and an evidence-backed v1.1 improvement portfolio under `/admin/post-ga-operations`.
+
+## Reproducible build
+
+The repository pins its Next.js, React, TypeScript, test, and lint toolchain. Use Node.js 20 in CI and deployment environments.
+
+```bash
+npm ci
+npm run typecheck
+npm test
+npm run build
+```
+
+`npm run build` uses `scripts/build-next.mjs`. The runner preserves normal Next.js failures, requires the complete production manifest set, and cleans up a known post-build process leak only after the final route report and required artifacts have been verified. `npm run build:raw` remains available for direct framework diagnostics.
