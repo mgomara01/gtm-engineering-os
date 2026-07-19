@@ -1,0 +1,6 @@
+export type WorkStatus='queued'|'ready'|'in_progress'|'blocked'|'completed'|'cancelled';
+export type OpportunityStage='identified'|'qualified'|'discovery'|'proposal'|'negotiation'|'won'|'lost';
+export interface WorkItem{id:string;workspaceId:string;title:string;description:string;status:WorkStatus;priority:'low'|'medium'|'high'|'critical';owner:string;dueAt?:string;accountId?:string;accountName?:string;opportunityId?:string;campaignId?:string;playbookStep?:number;blockedReason?:string;createdAt:string;completedAt?:string}
+export interface Opportunity{id:string;workspaceId:string;name:string;accountId:string;accountName:string;offerName:string;stage:OpportunityStage;value:number;probability:number;owner:string;nextAction:string;nextActionDue?:string;source:'campaign'|'signal'|'manual'|'referral';createdAt:string;updatedAt:string;lostReason?:string}
+export interface ApprovalRequest{id:string;workspaceId:string;objectType:'offer'|'playbook'|'campaign'|'opportunity'|'finding';objectName:string;requestedBy:string;reviewerRole:string;status:'pending'|'approved'|'rejected'|'changes_requested';requestedAt:string;ageHours:number;risk:'standard'|'elevated'|'high'}
+export interface ExecutionSummary{openTasks:number;overdueTasks:number;blockedTasks:number;pendingApprovals:number;pipelineValue:number;weightedPipeline:number}

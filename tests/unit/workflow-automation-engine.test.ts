@@ -1,0 +1,14 @@
+import { describe, expect, it } from 'vitest';
+import { activeConcurrency, approvalOverdue, automationReadiness, averageWorkflowDurationMinutes, scheduleHealthy, workflowReadyForActivation, workflowSuccessRate } from '../../apps/web/lib/workflow-automation-engine';
+import { getWorkflowAutomationData } from '../../apps/web/lib/data/workflow-automation';
+const now=new Date('2026-07-18T23:00:00Z');
+describe('workflow automation engine',()=>{const d=getWorkflowAutomationData();
+ it('identifies activation-ready workflow',()=>expect(workflowReadyForActivation(d.workflows[0])).toBe(true));
+ it('blocks high-risk workflow without approval',()=>expect(workflowReadyForActivation(d.workflows[2])).toBe(false));
+ it('calculates run success rate',()=>expect(workflowSuccessRate(d.runs)).toBe(50));
+ it('calculates average duration',()=>expect(averageWorkflowDurationMinutes(d.runs)).toBeGreaterThan(0));
+ it('detects overdue approval',()=>expect(approvalOverdue(d.approvals[0],now)).toBe(true));
+ it('validates enabled schedule',()=>expect(scheduleHealthy(d.schedules[0],now)).toBe(true));
+ it('counts active concurrency',()=>expect(activeConcurrency(d.runs)).toBe(1));
+ it('calculates bounded readiness',()=>{const score=automationReadiness(d.workflows,d.runs,d.approvals,d.schedules,now);expect(score).toBeGreaterThanOrEqual(0);expect(score).toBeLessThanOrEqual(100)});
+});

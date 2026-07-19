@@ -1,0 +1,8 @@
+import type {DocumentationAsset,LaunchControl,OnboardingProgram,ReleaseCommunication,TrainingModule} from './release-enablement-types';
+export function documentationCoverage(items:DocumentationAsset[]){if(!items.length)return 100;return Number((items.reduce((a,x)=>a+x.coveragePct,0)/items.length).toFixed(1));}
+export function staleDocumentation(items:DocumentationAsset[],now=new Date()){return items.filter(x=>x.status==='stale'||new Date(x.reviewDueAt)<now);}
+export function onboardingCompletion(items:OnboardingProgram[]){const total=items.reduce((a,x)=>a+x.participants,0);if(!total)return 100;return Number((items.reduce((a,x)=>a+x.completedParticipants,0)/total*100).toFixed(1));}
+export function trainingReadiness(items:TrainingModule[]){const required=items.filter(x=>x.required&&x.status==='published');if(!required.length)return 100;return Number((required.reduce((a,x)=>a+Math.min(x.completionPct,x.assessmentPassPct),0)/required.length).toFixed(1));}
+export function unpublishedCommunications(items:ReleaseCommunication[]){return items.filter(x=>x.status!=='published');}
+export function launchBlockers(items:LaunchControl[]){return items.filter(x=>x.required&&x.status!=='ready');}
+export function releaseEnablementReadiness(docs:DocumentationAsset[],programs:OnboardingProgram[],training:TrainingModule[],communications:ReleaseCommunication[],controls:LaunchControl[]){const doc=Math.max(0,documentationCoverage(docs)-staleDocumentation(docs).length*10);const onboard=onboardingCompletion(programs);const learn=trainingReadiness(training);const comm=Math.max(0,100-unpublishedCommunications(communications).length*12.5);const launch=Math.max(0,100-launchBlockers(controls).length*25);return Number(((doc+onboard+learn+comm+launch)/5).toFixed(1));}

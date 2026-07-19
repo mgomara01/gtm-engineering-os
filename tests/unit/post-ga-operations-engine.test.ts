@@ -1,0 +1,14 @@
+import {describe,expect,it} from 'vitest';
+import {adoptionCoverage,adoptionRate,approvedImprovementCoverage,continuousImprovementScore,customerHealthCoverage,feedbackTriageCoverage,initiativePriority,readyForNextRelease,valueRealizationCoverage} from '../../apps/web/lib/post-ga-operations-engine';
+import {getPostGAOperationsData} from '../../apps/web/lib/data/post-ga-operations';
+describe('post-GA operations engine',()=>{const d=getPostGAOperationsData();
+it('calculates feature adoption',()=>expect(adoptionRate(d.adoption[0])).toBe(86));
+it('tracks metrics meeting targets',()=>expect(adoptionCoverage(d.adoption)).toBe(100));
+it('tracks healthy customer coverage',()=>expect(customerHealthCoverage(d.health)).toBe(66.7));
+it('requires all feedback to be triaged',()=>expect(feedbackTriageCoverage(d.feedback)).toBe(100));
+it('verifies value realization',()=>expect(valueRealizationCoverage(d.outcomes)).toBe(100));
+it('prioritizes high-impact low-effort initiatives',()=>expect(initiativePriority(d.initiatives[1])).toBe(3));
+it('measures approved improvement coverage',()=>expect(approvedImprovementCoverage(d.initiatives)).toBe(75));
+it('produces a governed improvement score',()=>expect(continuousImprovementScore(d.adoption,d.health,d.feedback,d.outcomes,d.initiatives)).toBe(88.3));
+it('permits evidence-backed next-release planning',()=>expect(readyForNextRelease(d.adoption,d.health,d.feedback,d.outcomes,d.initiatives)).toBe(true));
+});

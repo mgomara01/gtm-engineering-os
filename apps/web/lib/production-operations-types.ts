@@ -1,0 +1,11 @@
+export type DeploymentStatus='planned'|'running'|'succeeded'|'failed'|'rolled_back';
+export type AlertSeverity='critical'|'high'|'medium'|'low';
+export type AlertStatus='open'|'acknowledged'|'resolved'|'suppressed';
+export type RunbookStatus='draft'|'approved'|'stale';
+export type ReadinessStatus='ready'|'at_risk'|'blocked';
+export type Deployment={id:string;version:string;environment:string;status:DeploymentStatus;startedAt:string;completedAt:string|null;strategy:'rolling'|'blue_green'|'canary';rollbackAvailable:boolean;changeOwner:string;};
+export type TelemetrySignal={id:string;service:string;signal:'logs'|'metrics'|'traces'|'synthetics';coveragePct:number;retentionDays:number;lastIngestAt:string|null;status:'healthy'|'degraded'|'missing';};
+export type OperationalAlert={id:string;title:string;service:string;severity:AlertSeverity;status:AlertStatus;owner:string;openedAt:string;acknowledgedAt:string|null;resolvedAt:string|null;runbookId:string|null;};
+export type Runbook={id:string;name:string;service:string;owner:string;status:RunbookStatus;lastReviewedAt:string;reviewDueAt:string;automatedSteps:number;manualSteps:number;};
+export type OnCallRotation={id:string;team:string;primary:string;secondary:string;timezone:string;coverageHours:number;handoffAt:string;escalationPolicy:string;};
+export type GoLiveControl={id:string;name:string;owner:string;required:boolean;status:ReadinessStatus;evidence:string;};

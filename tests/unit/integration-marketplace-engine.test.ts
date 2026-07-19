@@ -1,0 +1,12 @@
+import {describe,expect,it} from 'vitest';
+import {connectorReadiness,expiringCredentials,installationHealth,mappingCoverage,marketplaceCoverage,openCriticalAlerts,syncSuccessRate} from '../../apps/web/lib/integration-marketplace-engine';
+import {getIntegrationMarketplaceData} from '../../apps/web/lib/data/integration-marketplace';
+describe('integration marketplace engine',()=>{const d=getIntegrationMarketplaceData();const now=new Date('2026-07-18T23:00:00Z');
+it('calculates certified catalog coverage',()=>expect(marketplaceCoverage(d.connectors)).toBe(75));
+it('calculates installation health',()=>expect(installationHealth(d.installations)).toBe(66.7));
+it('calculates completed sync success',()=>expect(syncSuccessRate(d.jobs)).toBe(66.7));
+it('identifies incomplete required mappings',()=>expect(mappingCoverage(d.mappings)).toBe(66.7));
+it('finds expiring credentials',()=>expect(expiringCredentials(d.installations,now)).toHaveLength(1));
+it('finds high priority alerts',()=>expect(openCriticalAlerts(d.alerts)).toHaveLength(1));
+it('produces bounded readiness',()=>expect(connectorReadiness(d.connectors,d.installations,d.jobs,d.mappings,d.alerts,now)).toBeGreaterThan(60));
+it('handles empty collections',()=>expect(connectorReadiness([],[],[],[],[],now)).toBeGreaterThanOrEqual(0));});

@@ -1,0 +1,2 @@
+# Step 38 — Production Operations Architecture
+Step 38 establishes deployment records, telemetry coverage, operational alerts, runbooks, on-call rotations, and mandatory go-live controls. Deployments retain strategy and rollback posture; observability spans logs, metrics, traces, and synthetics; alerts require ownership and acknowledgement; required controls block production launch; all tables use workspace-scoped row-level security.

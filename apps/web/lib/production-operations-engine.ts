@@ -1,0 +1,8 @@
+import type {Deployment,GoLiveControl,OperationalAlert,Runbook,TelemetrySignal} from './production-operations-types';
+export function deploymentSuccessRate(items:Deployment[]){if(!items.length)return 100;return Number((items.filter(x=>x.status==='succeeded').length/items.length*100).toFixed(1));}
+export function observabilityCoverage(items:TelemetrySignal[]){if(!items.length)return 100;return Number((items.reduce((a,x)=>a+x.coveragePct,0)/items.length).toFixed(1));}
+export function openCriticalAlerts(items:OperationalAlert[]){return items.filter(x=>x.severity==='critical'&&!['resolved','suppressed'].includes(x.status));}
+export function meanAcknowledgementMinutes(items:OperationalAlert[]){const values=items.filter(x=>x.acknowledgedAt).map(x=>(new Date(x.acknowledgedAt!).getTime()-new Date(x.openedAt).getTime())/60000);if(!values.length)return 0;return Number((values.reduce((a,x)=>a+x,0)/values.length).toFixed(1));}
+export function staleRunbooks(items:Runbook[],now=new Date()){return items.filter(x=>x.status==='stale'||new Date(x.reviewDueAt)<now);}
+export function goLiveBlockers(items:GoLiveControl[]){return items.filter(x=>x.required&&x.status!=='ready');}
+export function operationalReadiness(deployments:Deployment[],signals:TelemetrySignal[],alerts:OperationalAlert[],runbooks:Runbook[],controls:GoLiveControl[]){const deployment=deploymentSuccessRate(deployments);const telemetry=observabilityCoverage(signals);const alert=Math.max(0,100-openCriticalAlerts(alerts).length*35);const runbook=Math.max(0,100-staleRunbooks(runbooks).length*20);const goLive=Math.max(0,100-goLiveBlockers(controls).length*25);return Number(((deployment+telemetry+alert+runbook+goLive)/5).toFixed(1));}

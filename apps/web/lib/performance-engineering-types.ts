@@ -1,0 +1,9 @@
+export type WorkloadTier='interactive'|'background'|'batch'|'analytics';
+export type CapacityStatus='healthy'|'watch'|'critical';
+export type LoadTestStatus='planned'|'running'|'passed'|'failed';
+export type ScalingMode='manual'|'scheduled'|'reactive'|'predictive';
+export type PerformanceService={id:string;name:string;owner:string;tier:WorkloadTier;monthlyRequests:number;p95LatencyMs:number;latencyBudgetMs:number;errorRatePct:number;capacityStatus:CapacityStatus;cpuUtilizationPct:number;memoryUtilizationPct:number;};
+export type LoadTest={id:string;serviceId:string;scenario:string;status:LoadTestStatus;targetRps:number;achievedRps:number;p95LatencyMs:number;errorRatePct:number;executedAt:string|null;releaseGate:boolean;};
+export type CapacityForecast={id:string;serviceId:string;period:string;projectedRequests:number;projectedPeakRps:number;headroomPct:number;confidencePct:number;recommendedAction:string;};
+export type ScalingPolicy={id:string;serviceId:string;mode:ScalingMode;minInstances:number;maxInstances:number;targetCpuPct:number;scaleOutCooldownSec:number;scaleInCooldownSec:number;enabled:boolean;};
+export type PerformanceBudget={id:string;route:string;metric:'lcp'|'inp'|'cls'|'server_latency'|'bundle_size';budget:number;current:number;unit:string;blocking:boolean;};

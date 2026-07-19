@@ -1,0 +1,11 @@
+export type TestLayer='unit'|'integration'|'contract'|'e2e'|'security'|'performance'|'uat';
+export type TestStatus='planned'|'running'|'passed'|'failed'|'blocked';
+export type DefectSeverity='critical'|'high'|'medium'|'low';
+export type DefectStatus='open'|'triaged'|'in_progress'|'resolved'|'accepted';
+export type ReleaseStatus='draft'|'testing'|'candidate'|'approved'|'rejected'|'released';
+export type EnvironmentCertificationStatus='pending'|'certified'|'expired'|'failed';
+export type QualitySuite={id:string;name:string;layer:TestLayer;owner:string;automated:boolean;requiredForRelease:boolean;totalCases:number;passedCases:number;failedCases:number;coveragePct:number;lastRunAt:string|null;status:TestStatus;};
+export type Defect={id:string;title:string;severity:DefectSeverity;status:DefectStatus;owner:string;releaseId:string|null;openedAt:string;targetResolutionAt:string;customerImpact:boolean;rootCause:string|null;};
+export type EnvironmentCertification={id:string;environment:string;version:string;status:EnvironmentCertificationStatus;certifiedAt:string|null;expiresAt:string|null;dataRefreshAt:string|null;configurationFingerprint:string;openBlockers:number;};
+export type ReleaseCandidate={id:string;version:string;status:ReleaseStatus;createdAt:string;targetReleaseAt:string;changeCount:number;blockingDefects:number;requiredSuitesPassed:number;requiredSuitesTotal:number;uatApproved:boolean;rollbackValidated:boolean;securityApproved:boolean;performanceApproved:boolean;releaseOwner:string;};
+export type UatSignoff={id:string;releaseId:string;businessArea:string;approver:string;status:'pending'|'approved'|'rejected';signedAt:string|null;notes:string;};

@@ -1,0 +1,9 @@
+export type ActivationStatus='inactive'|'shadow'|'limited'|'active'|'paused';
+export type WorkerStatus='healthy'|'degraded'|'stopped';
+export type ConsentState='granted'|'denied'|'unknown'|'expired';
+export type Channel='email'|'sms'|'phone'|'linkedin'|'direct_mail';
+export type ActivationControl={id:string;name:string;category:'workers'|'consent'|'recovery'|'providers'|'monitoring';status:'pass'|'warning'|'fail';blocking:boolean;evidence:string;owner:string};
+export type WorkerQueue={id:string;name:string;status:WorkerStatus;pending:number;running:number;failed:number;oldestAgeMinutes:number;maxAttempts:number;deadLetterEnabled:boolean};
+export type ConsentRecord={id:string;subject:string;channel:Channel;state:ConsentState;source:string;verifiedAt?:string;expiresAt?:string};
+export type SuppressionRecord={id:string;subject:string;channel:Channel|'all';reason:string;active:boolean;createdAt:string};
+export type DeadLetterItem={id:string;queue:string;jobType:string;attempts:number;failedAt:string;errorCode:string;errorMessage:string;replaySafe:boolean};

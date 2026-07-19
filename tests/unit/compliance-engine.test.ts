@@ -1,0 +1,14 @@
+import { describe, expect, it } from 'vitest';
+import { attestationCompletion, auditReadiness, complianceReadiness, evidenceRequestOverdue, exceptionExpired, obligationCoverage, policyAcknowledgementRate, policyReviewOverdue } from '../../apps/web/lib/compliance-engine';
+import { getComplianceData } from '../../apps/web/lib/data/compliance';
+const now=new Date('2026-07-18T23:00:00Z');
+describe('compliance engine',()=>{const d=getComplianceData();
+ it('detects overdue policy reviews',()=>expect(policyReviewOverdue(d.policies[1],now)).toBe(true));
+ it('calculates acknowledgement rate',()=>expect(policyAcknowledgementRate(d.policies[0])).toBeGreaterThan(90));
+ it('detects overdue evidence',()=>expect(evidenceRequestOverdue(d.evidence[2],now)).toBe(true));
+ it('calculates obligation coverage',()=>expect(obligationCoverage(d.obligations[0])).toBe(100));
+ it('calculates attestation completion',()=>expect(attestationCompletion(d.attestations)).toBeCloseTo(66.7));
+ it('detects expired exceptions',()=>expect(exceptionExpired(d.exceptions[1],now)).toBe(true));
+ it('calculates bounded audit readiness',()=>expect(auditReadiness(d.audits[0],d.evidence)).toBeGreaterThanOrEqual(0));
+ it('calculates bounded compliance readiness',()=>{const score=complianceReadiness(d.policies,d.obligations,d.evidence,d.attestations,d.exceptions,now);expect(score).toBeGreaterThanOrEqual(0);expect(score).toBeLessThanOrEqual(100)});
+});

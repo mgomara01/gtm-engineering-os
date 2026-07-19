@@ -1,0 +1,14 @@
+import { describe, expect, it } from 'vitest';
+import { agentReadyForProduction, agentReviewOverdue, aiOperationalReadiness, approvedModelCoverage, averageRunCost, guardrailCoverage, reviewOverdue, runSuccessRate } from '../../apps/web/lib/ai-operations-engine';
+import { getAiOperationsData } from '../../apps/web/lib/data/ai-operations';
+const now=new Date('2026-07-18T23:00:00Z');
+describe('AI operations engine',()=>{const d=getAiOperationsData();
+ it('detects overdue agent reviews',()=>expect(agentReviewOverdue(d.agents[2],now)).toBe(true));
+ it('identifies production-ready agents',()=>expect(agentReadyForProduction(d.agents[0],now)).toBe(true));
+ it('calculates run success rate',()=>expect(runSuccessRate(d.runs)).toBe(50));
+ it('calculates average run cost',()=>expect(averageRunCost(d.runs)).toBeGreaterThan(0));
+ it('calculates full guardrail coverage',()=>expect(guardrailCoverage(d.policies)).toBe(100));
+ it('detects overdue human review',()=>expect(reviewOverdue(d.reviews[0],now)).toBe(true));
+ it('calculates approved model coverage',()=>expect(approvedModelCoverage(d.providers)).toBe(50));
+ it('calculates bounded readiness',()=>{const score=aiOperationalReadiness(d.agents,d.runs,d.policies,d.reviews,d.providers,now);expect(score).toBeGreaterThanOrEqual(0);expect(score).toBeLessThanOrEqual(100)});
+});

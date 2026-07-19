@@ -1,0 +1,9 @@
+export type TrendDirection='up'|'down'|'flat';
+export type MetricFormat='number'|'currency'|'percent'|'days';
+export type AlertSeverity='info'|'warning'|'critical';
+export interface KpiDefinition{id:string;workspaceId:string;key:string;name:string;description:string;category:'implementation'|'data'|'intelligence'|'execution'|'pipeline'|'revenue';format:MetricFormat;target:number;warningThreshold?:number;ownerRole:string;cadence:'daily'|'weekly'|'monthly'|'quarterly';active:boolean}
+export interface KpiResult{id:string;workspaceId:string;kpiId:string;periodStart:string;periodEnd:string;value:number;priorValue?:number;target:number;calculatedAt:string;sourceStatus:'demo'|'partial'|'complete'}
+export interface MetricView{definition:KpiDefinition;result:KpiResult;variance:number;variancePercent:number|null;trend:TrendDirection;status:'on_track'|'watch'|'off_track'}
+export interface ManagementAlert{id:string;workspaceId:string;title:string;description:string;severity:AlertSeverity;category:string;metricKey?:string;detectedAt:string;status:'open'|'acknowledged'|'resolved';ownerRole:string;recommendedAction:string}
+export interface AttributionRecord{id:string;workspaceId:string;opportunityId:string;accountName:string;campaignName:string;playbookName:string;offerName:string;revenue:number;weight:number;attributedRevenue:number;model:'first_touch'|'last_touch'|'linear'|'manual';occurredAt:string}
+export interface OperatingReviewSection{title:string;status:'green'|'yellow'|'red';summary:string;metrics:string[];decisions:string[];actions:string[]}

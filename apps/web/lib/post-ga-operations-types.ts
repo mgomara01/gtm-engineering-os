@@ -1,0 +1,9 @@
+export type AdoptionTrend='growing'|'stable'|'declining';
+export type HealthStatus='healthy'|'watch'|'at_risk';
+export type FeedbackStatus='new'|'triaged'|'planned'|'resolved';
+export type ImprovementStatus='proposed'|'approved'|'in_progress'|'completed';
+export type ProductAdoptionMetric={id:string;name:string;owner:string;activeUsers:number;eligibleUsers:number;targetPercent:number;previousPercent:number;trend:AdoptionTrend;measuredAt:string;};
+export type CustomerHealthRecord={id:string;customer:string;segment:string;adoptionPercent:number;supportRisk:number;valueRealizationPercent:number;status:HealthStatus;owner:string;nextAction:string;};
+export type CustomerFeedbackItem={id:string;source:'support'|'interview'|'survey'|'usage';theme:string;description:string;impact:'low'|'medium'|'high'|'critical';status:FeedbackStatus;votes:number;owner:string;};
+export type ValueOutcome={id:string;name:string;baseline:number;current:number;target:number;unit:string;direction:'higher'|'lower';owner:string;verified:boolean;};
+export type ImprovementInitiative={id:string;title:string;category:'product'|'reliability'|'enablement'|'data'|'operations';impactScore:number;effortScore:number;status:ImprovementStatus;targetRelease:string;owner:string;linkedFeedback:string[];};

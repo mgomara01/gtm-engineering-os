@@ -1,0 +1,10 @@
+export type ForecastStatus='draft'|'active'|'retired';
+export type RecommendationStatus='proposed'|'accepted'|'rejected'|'implemented'|'measured';
+export type OptimizationType='next_best_account'|'next_best_offer'|'next_best_playbook'|'next_best_action'|'icp_drift'|'territory'|'funnel'|'capacity';
+export interface ForecastPoint{period:string;predicted:number;lower:number;upper:number;actual?:number}
+export interface ForecastModel{id:string;name:string;metric:string;workspace:string;status:ForecastStatus;horizon:string;confidence:number;version:number;lastRun:string;points:ForecastPoint[]}
+export interface OptimizationRecommendation{id:string;workspace:string;type:OptimizationType;title:string;summary:string;impact:number;confidence:number;status:RecommendationStatus;owner:string;evidence:string[];createdAt:string;expiresAt?:string}
+export interface RecommendationOutcome{id:string;recommendationId:string;baseline:number;expected:number;actual?:number;unit:string;measuredAt?:string}
+export interface TrendInsight{id:string;title:string;category:string;direction:'positive'|'negative'|'neutral';strength:number;summary:string;rootCauses:string[];recommendedAction:string}
+export interface BenchmarkMetric{id:string;name:string;workspaceValues:Record<string,number>;portfolioMedian:number;unit:'percent'|'currency'|'days'|'number'}
+export interface ExecutiveBrief{id:string;period:string;generatedAt:string;status:'draft'|'approved';summary:string;wins:string[];risks:string[];decisions:string[];actions:string[]}

@@ -1,0 +1,8 @@
+export type ConnectionStatus='healthy'|'degraded'|'disconnected'|'pending';
+export type SyncStatus='queued'|'running'|'succeeded'|'partial'|'failed'|'cancelled';
+export type Direction='inbound'|'outbound'|'bidirectional';
+export interface IntegrationConnection{id:string;workspaceId:string;name:string;provider:string;category:string;direction:Direction;status:ConnectionStatus;authType:'oauth2'|'api_key'|'service_account'|'webhook';lastCheckedAt:string;lastSuccessfulSyncAt?:string;failureCount:number;recordsLast24h:number;ownerRole:string;scopes:string[];}
+export interface SyncJob{id:string;workspaceId:string;connectionId:string;connectionName:string;objectType:string;direction:'inbound'|'outbound';status:SyncStatus;startedAt:string;completedAt?:string;recordsRead:number;recordsWritten:number;recordsRejected:number;retryCount:number;cursorBefore?:string;cursorAfter?:string;errorCode?:string;errorMessage?:string;}
+export interface ReconciliationIssue{id:string;workspaceId:string;connectionId:string;connectionName:string;objectType:string;externalId:string;issueType:'missing_internal'|'missing_external'|'field_mismatch'|'duplicate'|'stale';severity:'critical'|'warning'|'info';status:'open'|'acknowledged'|'resolved';summary:string;detectedAt:string;ownerRole:string;}
+export interface WebhookEndpoint{id:string;workspaceId:string;connectionId:string;connectionName:string;eventType:string;status:'active'|'paused';lastReceivedAt?:string;deliveries24h:number;failed24h:number;signatureRequired:boolean;}
+export interface ConnectorHealth{connectionId:string;score:number;status:ConnectionStatus;successRate:number;freshnessMinutes:number;failureRate:number;}

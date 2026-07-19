@@ -1,0 +1,10 @@
+export type ConnectorCategory='crm'|'marketing'|'data'|'communications'|'finance'|'productivity';
+export type ConnectorStatus='available'|'beta'|'deprecated';
+export type InstallationStatus='healthy'|'degraded'|'disabled'|'reauthorization_required';
+export type SyncStatus='succeeded'|'running'|'failed'|'partial';
+export type CredentialType='oauth2'|'api_key'|'service_account';
+export type ConnectorDefinition={id:string;name:string;category:ConnectorCategory;status:ConnectorStatus;publisher:string;version:string;certified:boolean;scopes:string[];supportsWebhooks:boolean;supportsIncrementalSync:boolean;};
+export type ConnectorInstallation={id:string;connectorId:string;workspaceId:string;status:InstallationStatus;credentialType:CredentialType;credentialExpiresAt:string|null;lastHealthCheckAt:string;owner:string;environment:'sandbox'|'production';};
+export type SyncJob={id:string;installationId:string;objectType:string;direction:'inbound'|'outbound'|'bidirectional';status:SyncStatus;startedAt:string;completedAt:string|null;recordsRead:number;recordsWritten:number;recordsFailed:number;retryCount:number;cursor:string|null;};
+export type FieldMapping={id:string;installationId:string;sourceObject:string;sourceField:string;targetObject:string;targetField:string;transform:string|null;required:boolean;active:boolean;};
+export type ConnectorAlert={id:string;installationId:string;severity:'critical'|'high'|'medium'|'low';type:'auth'|'quota'|'schema'|'delivery'|'latency';message:string;openedAt:string;acknowledged:boolean;};

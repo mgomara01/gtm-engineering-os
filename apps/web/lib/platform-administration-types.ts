@@ -1,0 +1,11 @@
+export type TenantLifecycle='provisioning'|'active'|'suspended'|'offboarding';
+export type TenantHealth='healthy'|'warning'|'critical';
+export type EnvironmentName='development'|'staging'|'production';
+export type ChangeStatus='draft'|'approved'|'scheduled'|'deployed'|'rolled_back';
+export type SupportAccessStatus='requested'|'approved'|'active'|'expired'|'revoked';
+export type TenantRecord={id:string;name:string;plan:string;lifecycle:TenantLifecycle;health:TenantHealth;region:string;owner:string;createdAt:string;lastActivityAt:string;dataResidency:string;};
+export type EnvironmentRecord={id:string;name:EnvironmentName;version:string;status:'healthy'|'degraded'|'maintenance';configurationHash:string;lastDeploymentAt:string;promotionBlocked:boolean;};
+export type ConfigurationChange={id:string;environment:EnvironmentName;category:'feature'|'security'|'integration'|'billing'|'runtime';summary:string;status:ChangeStatus;risk:'low'|'medium'|'high';requestedBy:string;approvedBy:string|null;scheduledAt:string|null;};
+export type TenantEntitlement={id:string;tenantId:string;capability:string;enabled:boolean;limit:number|null;source:'plan'|'override'|'trial';expiresAt:string|null;};
+export type SupportAccessGrant={id:string;tenantId:string;engineer:string;status:SupportAccessStatus;scope:string[];reason:string;requestedAt:string;expiresAt:string;approvedBy:string|null;};
+export type TenantHealthSignal={id:string;tenantId:string;type:'usage'|'sync'|'billing'|'security'|'reliability';severity:'low'|'medium'|'high'|'critical';message:string;openedAt:string;resolved:boolean;};

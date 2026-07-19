@@ -1,0 +1,10 @@
+export type DocumentationStatus='draft'|'approved'|'stale';
+export type Audience='customer'|'administrator'|'operator'|'developer'|'executive';
+export type OnboardingStatus='not_started'|'in_progress'|'completed'|'blocked';
+export type TrainingStatus='draft'|'published'|'retired';
+export type LaunchStatus='ready'|'at_risk'|'blocked';
+export type DocumentationAsset={id:string;title:string;category:'product'|'implementation'|'administration'|'api'|'runbook';audience:Audience;owner:string;status:DocumentationStatus;version:string;lastReviewedAt:string;reviewDueAt:string;coveragePct:number;};
+export type OnboardingProgram={id:string;name:string;audience:Audience;owner:string;status:OnboardingStatus;participants:number;completedParticipants:number;targetDays:number;actualDays:number|null;blocker:string|null;};
+export type TrainingModule={id:string;title:string;audience:Audience;owner:string;status:TrainingStatus;required:boolean;completionPct:number;assessmentPassPct:number;expiresAfterDays:number|null;};
+export type ReleaseCommunication={id:string;version:string;channel:'release_notes'|'email'|'in_app'|'webinar';audience:Audience;owner:string;status:'planned'|'published';scheduledAt:string;publishedAt:string|null;};
+export type LaunchControl={id:string;name:string;owner:string;required:boolean;status:LaunchStatus;evidence:string;};

@@ -1,0 +1,9 @@
+export type CertificationStatus='pending'|'passed'|'failed'|'waived';
+export type RiskLevel='critical'|'high'|'medium'|'low';
+export type AcceptanceStatus='pending'|'accepted'|'rejected';
+export type LaunchGateStatus='ready'|'at_risk'|'blocked';
+export type ReleaseCertification={id:string;domain:'quality'|'security'|'operations'|'performance'|'compliance'|'enablement';owner:string;status:CertificationStatus;evidence:string;required:boolean;completedAt:string|null;};
+export type MigrationReadiness={id:string;name:string;owner:string;status:CertificationStatus;dryRunComplete:boolean;rollbackValidated:boolean;dataReconciled:boolean;estimatedMinutes:number;};
+export type ResidualRisk={id:string;title:string;owner:string;level:RiskLevel;status:'open'|'mitigated'|'accepted';mitigation:string;expiresAt:string|null;};
+export type FunctionalAcceptance={id:string;function:'product'|'engineering'|'security'|'operations'|'finance'|'customer_success';owner:string;status:AcceptanceStatus;notes:string;acceptedAt:string|null;};
+export type GALaunchGate={id:string;name:string;owner:string;required:boolean;status:LaunchGateStatus;evidence:string;};

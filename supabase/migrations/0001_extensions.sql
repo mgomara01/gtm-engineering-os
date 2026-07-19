@@ -1,0 +1,14 @@
+create extension if not exists pgcrypto;
+create extension if not exists citext;
+create schema if not exists platform;
+create schema if not exists configuration;
+create schema if not exists entities;
+create schema if not exists ingestion;
+create schema if not exists intelligence;
+create schema if not exists scoring;
+create schema if not exists gtm;
+create schema if not exists implementation;
+create schema if not exists agents;
+create schema if not exists analytics;
+create schema if not exists governance;
+create schema if not exists integrations;

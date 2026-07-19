@@ -1,0 +1,10 @@
+export type AuditSeverity='info'|'warning'|'critical';
+export type ReviewStatus='planned'|'in_progress'|'completed'|'overdue';
+export type ChangeStatus='draft'|'review'|'approved'|'scheduled'|'deployed'|'rejected'|'rolled_back';
+export type RetentionAction='retain'|'archive'|'anonymize'|'delete';
+export interface AuditEvent{id:string;workspaceId:string;occurredAt:string;actor:string;actorType:'user'|'agent'|'integration'|'system';action:string;resourceType:string;resourceId:string;severity:AuditSeverity;summary:string;correlationId:string;ipAddress?:string;immutable:boolean;}
+export interface AccessReview{id:string;workspaceId:string;name:string;scope:string;owner:string;dueAt:string;status:ReviewStatus;membersReviewed:number;exceptions:number;certifiedBy?:string;completedAt?:string;}
+export interface AccessException{id:string;workspaceId:string;reviewId:string;principal:string;role:string;reason:string;risk:'low'|'medium'|'high';status:'open'|'remediated'|'accepted';owner:string;dueAt:string;}
+export interface ChangeRequest{id:string;workspaceId:string;title:string;category:'configuration'|'schema'|'integration'|'agent'|'security';status:ChangeStatus;risk:'low'|'medium'|'high';requestedBy:string;owner:string;requestedAt:string;scheduledAt?:string;approvalsRequired:number;approvalsReceived:number;rollbackPlan:boolean;summary:string;}
+export interface RetentionPolicy{id:string;workspaceId:string;dataClass:string;recordType:string;retentionDays:number;action:RetentionAction;legalHold:boolean;owner:string;lastEvaluatedAt:string;nextEvaluationAt:string;eligibleRecords:number;}
+export interface ReleaseGate{id:string;workspaceId:string;name:string;category:string;status:'pass'|'warning'|'fail';owner:string;evidence:string;blocking:boolean;}

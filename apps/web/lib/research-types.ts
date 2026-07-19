@@ -1,0 +1,8 @@
+export type ResearchStatus='queued'|'running'|'review_required'|'complete'|'failed';
+export type ReviewStatus='pending'|'accepted'|'rejected'|'edited';
+export type ResearchJob={id:string;workspaceId:string;entityId:string;entityName:string;researchType:string;priority:'low'|'normal'|'high';status:ResearchStatus;provider:string;requestedBy:string;requestedAt:string;completedAt?:string;confidence:number;estimatedCost:number;findingCount:number};
+export type EvidenceItem={id:string;title:string;sourceType:string;sourceReference:string;excerpt:string;capturedAt:string;reliability:number};
+export type ResearchFinding={id:string;jobId:string;findingType:string;fieldName?:string;currentValue?:string;proposedValue:string;summary:string;confidence:number;verificationStatus:'unverified'|'supported'|'verified'|'conflicting';evidenceIds:string[];reviewStatus:ReviewStatus};
+export type Signal={id:string;workspaceId:string;entityId:string;entityName:string;signalType:string;summary:string;strength:number;confidence:number;detectedAt:string;expiresAt?:string;status:'active'|'actioned'|'dismissed'|'expired';source:string;recommendedAction:string};
+export type AccountBrief={id:string;workspaceId:string;entityId:string;entityName:string;version:number;summary:string;opportunities:string[];risks:string[];recommendedActions:string[];confidence:number;generatedAt:string;reviewStatus:ReviewStatus;sourceCount:number};
+export type EnrichmentProvider={id:string;name:string;category:string;status:'active'|'inactive'|'test';priority:number;fields:string[];costModel:string;lastSuccess?:string;successRate:number};

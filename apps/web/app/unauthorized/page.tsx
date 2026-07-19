@@ -1,0 +1,1 @@
+export default function Unauthorized(){return <main className="login"><h1>Access denied</h1><p className="muted">Your account does not have permission to access this workspace or module.</p><a className="btn" href="/">Return to workspace</a></main>}
