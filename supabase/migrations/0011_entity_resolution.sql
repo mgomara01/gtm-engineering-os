@@ -4,7 +4,7 @@ create table if not exists entities.organization_aliases (
  organization_id uuid not null references entities.organizations(id) on delete cascade,
  alias_name text not null,
  normalized_alias text not null,
- source_record_id uuid references ingestion.source_records(id),
+ source_record_id uuid, -- FIXME: ingestion.source_records table not yet implemented; FK dropped to keep this migration deployable
  is_primary boolean not null default false,
  created_at timestamptz not null default now(),
  unique(organization_id, normalized_alias)
@@ -59,7 +59,7 @@ create table if not exists entities.organization_relationships (
  confidence numeric(7,4) check(confidence between 0 and 100),
  effective_from date,
  effective_to date,
- source_record_id uuid references ingestion.source_records(id),
+ source_record_id uuid, -- FIXME: ingestion.source_records table not yet implemented; FK dropped to keep this migration deployable
  created_at timestamptz not null default now(),
  updated_at timestamptz not null default now(),
  check(source_organization_id <> target_organization_id),

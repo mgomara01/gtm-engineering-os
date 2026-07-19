@@ -71,7 +71,7 @@ create table if not exists analytics.management_alerts (
 create table if not exists analytics.attribution_records (
   id uuid primary key default gen_random_uuid(),
   workspace_id uuid not null references platform.workspaces(id) on delete cascade,
-  opportunity_id uuid references gtm.opportunities(id),
+  opportunity_id uuid, -- FIXME: gtm.opportunities table not yet implemented; FK dropped to keep this migration deployable
   campaign_id uuid references gtm.campaigns(id),
   playbook_id uuid references gtm.playbooks(id),
   offer_id uuid references gtm.offers(id),

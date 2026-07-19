@@ -1,7 +1,7 @@
 -- Step 37: End-to-end quality engineering and release hardening
 create table if not exists public.quality_suites (
   id uuid primary key default gen_random_uuid(),
-  workspace_id uuid not null references public.workspaces(id) on delete cascade,
+  workspace_id uuid not null references platform.workspaces(id) on delete cascade,
   name text not null,
   layer text not null check (layer in ('unit','integration','contract','e2e','security','performance','uat')),
   owner text not null,
@@ -18,7 +18,7 @@ create table if not exists public.quality_suites (
 );
 create table if not exists public.quality_defects (
   id uuid primary key default gen_random_uuid(),
-  workspace_id uuid not null references public.workspaces(id) on delete cascade,
+  workspace_id uuid not null references platform.workspaces(id) on delete cascade,
   external_key text not null,
   title text not null,
   severity text not null check (severity in ('critical','high','medium','low')),
@@ -34,7 +34,7 @@ create table if not exists public.quality_defects (
 );
 create table if not exists public.environment_certifications (
   id uuid primary key default gen_random_uuid(),
-  workspace_id uuid not null references public.workspaces(id) on delete cascade,
+  workspace_id uuid not null references platform.workspaces(id) on delete cascade,
   environment text not null,
   version text not null,
   status text not null check (status in ('pending','certified','expired','failed')),
@@ -48,7 +48,7 @@ create table if not exists public.environment_certifications (
 );
 create table if not exists public.release_candidates (
   id uuid primary key default gen_random_uuid(),
-  workspace_id uuid not null references public.workspaces(id) on delete cascade,
+  workspace_id uuid not null references platform.workspaces(id) on delete cascade,
   version text not null,
   status text not null check (status in ('draft','testing','candidate','approved','rejected','released')),
   created_at timestamptz not null default now(),
@@ -68,7 +68,7 @@ create table if not exists public.release_candidates (
 alter table public.quality_defects add constraint quality_defects_release_candidate_fk foreign key (release_candidate_id) references public.release_candidates(id) on delete set null;
 create table if not exists public.uat_signoffs (
   id uuid primary key default gen_random_uuid(),
-  workspace_id uuid not null references public.workspaces(id) on delete cascade,
+  workspace_id uuid not null references platform.workspaces(id) on delete cascade,
   release_candidate_id uuid not null references public.release_candidates(id) on delete cascade,
   business_area text not null,
   approver text not null,

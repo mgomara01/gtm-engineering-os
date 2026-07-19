@@ -46,16 +46,16 @@ alter table ingestion.import_rows enable row level security;
 alter table ingestion.field_mappings enable row level security;
 alter table ingestion.data_lineage enable row level security;
 
-create policy "workspace members read sources" on ingestion.data_sources for select using (platform.user_can_access_workspace(workspace_id));
+create policy "workspace members read sources" on ingestion.data_sources for select using (platform.user_has_workspace_access(workspace_id));
 create policy "workspace engineers manage sources" on ingestion.data_sources for all using (platform.user_has_workspace_permission(workspace_id,'data.manage')) with check (platform.user_has_workspace_permission(workspace_id,'data.manage'));
-create policy "workspace members read batches" on ingestion.import_batches for select using (platform.user_can_access_workspace(workspace_id));
+create policy "workspace members read batches" on ingestion.import_batches for select using (platform.user_has_workspace_access(workspace_id));
 create policy "workspace engineers manage batches" on ingestion.import_batches for all using (platform.user_has_workspace_permission(workspace_id,'data.manage')) with check (platform.user_has_workspace_permission(workspace_id,'data.manage'));
-create policy "workspace members read lineage" on ingestion.data_lineage for select using (platform.user_can_access_workspace(workspace_id));
+create policy "workspace members read lineage" on ingestion.data_lineage for select using (platform.user_has_workspace_access(workspace_id));
 create policy "workspace engineers manage lineage" on ingestion.data_lineage for all using (platform.user_has_workspace_permission(workspace_id,'data.manage')) with check (platform.user_has_workspace_permission(workspace_id,'data.manage'));
 
-create policy "members read import files" on ingestion.import_files for select using (exists(select 1 from ingestion.import_batches b where b.id=import_batch_id and platform.user_can_access_workspace(b.workspace_id)));
+create policy "members read import files" on ingestion.import_files for select using (exists(select 1 from ingestion.import_batches b where b.id=import_batch_id and platform.user_has_workspace_access(b.workspace_id)));
 create policy "engineers manage import files" on ingestion.import_files for all using (exists(select 1 from ingestion.import_batches b where b.id=import_batch_id and platform.user_has_workspace_permission(b.workspace_id,'data.manage')));
-create policy "members read import rows" on ingestion.import_rows for select using (exists(select 1 from ingestion.import_files f join ingestion.import_batches b on b.id=f.import_batch_id where f.id=import_file_id and platform.user_can_access_workspace(b.workspace_id)));
+create policy "members read import rows" on ingestion.import_rows for select using (exists(select 1 from ingestion.import_files f join ingestion.import_batches b on b.id=f.import_batch_id where f.id=import_file_id and platform.user_has_workspace_access(b.workspace_id)));
 create policy "engineers manage import rows" on ingestion.import_rows for all using (exists(select 1 from ingestion.import_files f join ingestion.import_batches b on b.id=f.import_batch_id where f.id=import_file_id and platform.user_has_workspace_permission(b.workspace_id,'data.manage')));
-create policy "members read mappings" on ingestion.field_mappings for select using (exists(select 1 from ingestion.import_batches b where b.id=import_batch_id and platform.user_can_access_workspace(b.workspace_id)));
+create policy "members read mappings" on ingestion.field_mappings for select using (exists(select 1 from ingestion.import_batches b where b.id=import_batch_id and platform.user_has_workspace_access(b.workspace_id)));
 create policy "engineers manage mappings" on ingestion.field_mappings for all using (exists(select 1 from ingestion.import_batches b where b.id=import_batch_id and platform.user_has_workspace_permission(b.workspace_id,'data.manage')));
