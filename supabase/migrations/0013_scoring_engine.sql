@@ -6,7 +6,7 @@ create table if not exists scoring.models (
   name text not null,
   description text,
   status text not null default 'draft' check (status in ('draft','active','retired')),
-  created_by uuid references platform.users(id),
+  created_by uuid references platform.user_profiles(id),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -15,7 +15,7 @@ create table if not exists scoring.model_versions (
   workspace_id uuid not null references platform.workspaces(id) on delete cascade,
   version_number integer not null, status text not null default 'draft' check(status in ('draft','approved','active','retired')),
   priority_thresholds jsonb not null default '{"a":85,"b":70,"c":0}'::jsonb,
-  change_summary text, approved_by uuid references platform.users(id), approved_at timestamptz,
+  change_summary text, approved_by uuid references platform.user_profiles(id), approved_at timestamptz,
   created_at timestamptz not null default now(), unique(model_id,version_number)
 );
 create table if not exists scoring.factors (
@@ -36,7 +36,7 @@ create table if not exists scoring.runs (
   id uuid primary key default gen_random_uuid(), workspace_id uuid not null references platform.workspaces(id) on delete cascade,
   model_version_id uuid not null references scoring.model_versions(id), run_type text not null check(run_type in ('production','simulation','backfill')),
   status text not null default 'queued' check(status in ('queued','running','complete','failed','cancelled')),
-  requested_by uuid references platform.users(id), entity_count integer not null default 0, started_at timestamptz, completed_at timestamptz,
+  requested_by uuid references platform.user_profiles(id), entity_count integer not null default 0, started_at timestamptz, completed_at timestamptz,
   input_snapshot jsonb not null default '{}'::jsonb, error_details jsonb, created_at timestamptz not null default now()
 );
 create table if not exists scoring.account_scores (

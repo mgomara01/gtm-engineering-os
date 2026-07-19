@@ -4,14 +4,14 @@ create table if not exists ingestion.data_sources (
   id uuid primary key default gen_random_uuid(), workspace_id uuid not null references platform.workspaces(id),
   name text not null, source_category text not null, access_method text not null default 'file',
   refresh_frequency text, reliability_rating numeric(7,4), coverage_rating numeric(7,4), restrictions text,
-  status text not null default 'active', created_at timestamptz not null default now(), created_by uuid references platform.users(id)
+  status text not null default 'active', created_at timestamptz not null default now(), created_by uuid references platform.user_profiles(id)
 );
 create table if not exists ingestion.import_batches (
   id uuid primary key default gen_random_uuid(), workspace_id uuid not null references platform.workspaces(id), data_source_id uuid references ingestion.data_sources(id),
   entity_type text not null, status text not null default 'uploaded', file_count integer not null default 0, row_count integer not null default 0,
   successful_row_count integer not null default 0, failed_row_count integer not null default 0, duplicate_row_count integer not null default 0,
-  mapping_snapshot jsonb not null default '[]', validation_summary jsonb not null default '{}', initiated_by uuid references platform.users(id),
-  started_at timestamptz not null default now(), completed_at timestamptz, rolled_back_at timestamptz, rolled_back_by uuid references platform.users(id), rollback_reason text
+  mapping_snapshot jsonb not null default '[]', validation_summary jsonb not null default '{}', initiated_by uuid references platform.user_profiles(id),
+  started_at timestamptz not null default now(), completed_at timestamptz, rolled_back_at timestamptz, rolled_back_by uuid references platform.user_profiles(id), rollback_reason text
 );
 create table if not exists ingestion.import_files (
   id uuid primary key default gen_random_uuid(), import_batch_id uuid not null references ingestion.import_batches(id) on delete restrict,
@@ -27,12 +27,12 @@ create table if not exists ingestion.field_mappings (
   id uuid primary key default gen_random_uuid(), import_batch_id uuid not null references ingestion.import_batches(id) on delete restrict,
   source_field_name text not null, inferred_type text, target_entity_type text not null, target_field_name text,
   confidence numeric(7,4), transformation_definition jsonb not null default '{}', required boolean not null default false,
-  approved_by uuid references platform.users(id), approved_at timestamptz, unique(import_batch_id,source_field_name)
+  approved_by uuid references platform.user_profiles(id), approved_at timestamptz, unique(import_batch_id,source_field_name)
 );
 create table if not exists ingestion.data_lineage (
   id uuid primary key default gen_random_uuid(), workspace_id uuid not null references platform.workspaces(id), import_row_id uuid not null references ingestion.import_rows(id) on delete restrict,
   entity_type text not null, entity_id uuid, field_name text not null, source_field_name text not null, source_value text,
-  accepted_value text, confidence numeric(7,4), accepted_at timestamptz, accepted_by uuid references platform.users(id), superseded_at timestamptz,
+  accepted_value text, confidence numeric(7,4), accepted_at timestamptz, accepted_by uuid references platform.user_profiles(id), superseded_at timestamptz,
   created_at timestamptz not null default now()
 );
 create index if not exists idx_import_batches_workspace_created on ingestion.import_batches(workspace_id,started_at desc);

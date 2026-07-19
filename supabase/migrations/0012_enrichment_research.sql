@@ -28,7 +28,7 @@ create table if not exists intelligence.research_jobs (
   priority text not null default 'normal' check (priority in ('low','normal','high')),
   status text not null default 'queued' check (status in ('queued','running','review_required','complete','failed','cancelled')),
   provider_id uuid references intelligence.enrichment_providers(id),
-  requested_by uuid references platform.users(id),
+  requested_by uuid references platform.user_profiles(id),
   confidence numeric(7,4),
   estimated_cost numeric(18,6),
   actual_cost numeric(18,6),
@@ -64,7 +64,7 @@ create table if not exists intelligence.research_findings (
   confidence numeric(7,4) not null,
   verification_status text not null default 'unverified' check (verification_status in ('unverified','supported','verified','conflicting')),
   review_status text not null default 'pending' check (review_status in ('pending','accepted','rejected','edited')),
-  reviewed_by uuid references platform.users(id),
+  reviewed_by uuid references platform.user_profiles(id),
   reviewed_at timestamptz,
   created_at timestamptz not null default now()
 );
@@ -108,7 +108,7 @@ create table if not exists intelligence.account_briefs (
   review_status text not null default 'pending' check (review_status in ('pending','accepted','rejected','edited')),
   generated_by_job_id uuid references intelligence.research_jobs(id),
   generated_at timestamptz not null default now(),
-  reviewed_by uuid references platform.users(id),
+  reviewed_by uuid references platform.user_profiles(id),
   reviewed_at timestamptz,
   unique(workspace_id,entity_type,entity_id,version_number)
 );
