@@ -13,13 +13,26 @@ create table if not exists execution.approval_requests (
  risk text not null default 'standard' check(risk in ('standard','elevated','high')), rationale text,
  decided_by uuid, decided_at timestamptz, decision_notes text, before_snapshot jsonb, after_snapshot jsonb,
  created_at timestamptz not null default now());
+-- Genuinely missing (not a naming issue): the four ALTER TABLE statements below
+-- assume gtm.opportunities already exists, but no migration ever created it.
+-- Shape matches the app's Opportunity TypeScript type (apps/web/lib/execution-types.ts)
+-- and the mock data in apps/web/lib/data/execution.ts.
+create table if not exists gtm.opportunities (
+ id uuid primary key default gen_random_uuid(), workspace_id uuid not null references platform.workspaces(id) on delete cascade,
+ account_id uuid references entities.organizations(id), name text not null, offer_id uuid references gtm.offers(id),
+ stage text not null default 'identified' check(stage in ('identified','qualified','discovery','proposal','negotiation','won','lost')),
+ value numeric not null default 0, owner_user_id uuid references platform.user_profiles(id), lost_reason text,
+ created_at timestamptz not null default now(), updated_at timestamptz not null default now());
 alter table gtm.opportunities add column if not exists probability numeric(5,2) default 0;
 alter table gtm.opportunities add column if not exists next_action text;
 alter table gtm.opportunities add column if not exists next_action_due timestamptz;
 alter table gtm.opportunities add column if not exists source_type text;
 alter table execution.work_items enable row level security;
 alter table execution.approval_requests enable row level security;
+alter table gtm.opportunities enable row level security;
 create policy work_items_workspace_access on execution.work_items using (platform.is_workspace_member(workspace_id));
 create policy approval_requests_workspace_access on execution.approval_requests using (platform.is_workspace_member(workspace_id));
+create policy opportunities_workspace_access on gtm.opportunities using (platform.is_workspace_member(workspace_id)) with check (platform.is_workspace_member(workspace_id));
 create index if not exists work_items_workspace_status_idx on execution.work_items(workspace_id,status,due_at);
 create index if not exists approvals_workspace_status_idx on execution.approval_requests(workspace_id,status,created_at);
+create index if not exists opportunities_workspace_stage_idx on gtm.opportunities(workspace_id,stage);
