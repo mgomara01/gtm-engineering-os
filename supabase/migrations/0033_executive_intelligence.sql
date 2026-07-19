@@ -25,7 +25,10 @@ alter table executive_metrics enable row level security;
 alter table forecast_scenarios enable row level security;
 alter table executive_reports enable row level security;
 alter table decision_briefs enable row level security;
-create policy executive_metrics_workspace on executive_metrics using (workspace_id in (select workspace_id from workspace_members where user_id=auth.uid()));
-create policy forecast_scenarios_workspace on forecast_scenarios using (workspace_id in (select workspace_id from workspace_members where user_id=auth.uid()));
-create policy executive_reports_workspace on executive_reports using (workspace_id in (select workspace_id from workspace_members where user_id=auth.uid()));
-create policy decision_briefs_workspace on decision_briefs using (workspace_id in (select workspace_id from workspace_members where user_id=auth.uid()));
+-- Genuinely missing (not a typo): workspace_members was never created anywhere.
+-- Rewritten to use the canonical membership check every other policy in this
+-- codebase uses, instead of inventing a stand-in table for a raw subquery.
+create policy executive_metrics_workspace on executive_metrics using (platform.user_has_workspace_access(workspace_id));
+create policy forecast_scenarios_workspace on forecast_scenarios using (platform.user_has_workspace_access(workspace_id));
+create policy executive_reports_workspace on executive_reports using (platform.user_has_workspace_access(workspace_id));
+create policy decision_briefs_workspace on decision_briefs using (platform.user_has_workspace_access(workspace_id));
