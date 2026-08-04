@@ -1,10 +1,13 @@
+import { redirect } from 'next/navigation';
 import { getWorkspaceContext } from '@/lib/workspace-context';
 import { getImplementationStages } from '@/lib/data/implementation';
 import { getMetricViews, getAlerts } from '@/lib/data/analytics';
 import { formatMetric } from '@/lib/analytics-engine';
 export default async function Page(){
   const {activeWorkspace}=await getWorkspaceContext();
-  const [stages,scorecard,alerts]=await Promise.all([getImplementationStages(activeWorkspace!.id),getMetricViews(activeWorkspace!.id),getAlerts(activeWorkspace!.id)]);
+  if(!activeWorkspace) redirect('/login');
+  const [stages,scorecard,alerts]=await Promise.all([getImplementationStages(activeWorkspace.id),getMetricViews(activeWorkspace.id),getAlerts(activeWorkspace.id)]);
+  if(!stages.length) return <div className="hero"><div><h1>Workspace Overview</h1><p className="muted">{activeWorkspace.name} has no implementation plan yet. Run the seed migration or create one to populate this dashboard.</p></div></div>;
   const current=stages.find(stage=>stage.status==='active') ?? stages[0];
   const byKey=(key:string)=>scorecard.find(m=>m.definition.key===key);
   const data=byKey('data_completeness'); const pipeline=byKey('weighted_pipeline');
