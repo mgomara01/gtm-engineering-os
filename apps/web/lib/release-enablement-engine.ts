@@ -1,4 +1,4 @@
-import type {DocumentationAsset,LaunchControl,OnboardingProgram,ReleaseCommunication,TrainingModule} from './release-enablement-types';import type {DocumentationAsset,LaunchControl,OnboardingProgram,ReleaseCommunication,TrainingModule} from './release-enablement-types';
+import type {DocumentationAsset,LaunchControl,OnboardingProgram,ReleaseCommunication,TrainingModule} from './release-enablement-types';
 export function documentationCoverage(items:DocumentationAsset[]){if(!items.length)return 100;return Number((items.reduce((a,x)=>a+x.coveragePct,0)/items.length).toFixed(1));}
 export function staleDocumentation(items:DocumentationAsset[],now=new Date()){return items.filter(x=>x.status==='stale'||new Date(x.reviewDueAt)<now);}
 export function onboardingCompletion(items:OnboardingProgram[]){const total=items.reduce((a,x)=>a+x.participants,0);if(!total)return 100;return Number((items.reduce((a,x)=>a+x.completedParticipants,0)/total*100).toFixed(1));}
