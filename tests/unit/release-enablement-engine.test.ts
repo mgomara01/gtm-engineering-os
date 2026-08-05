@@ -38,7 +38,9 @@ describe('release enablement engine', () => {
   });
 
   it('calculates release readiness', () => {
-    expect(releaseEnablementReadiness(d.documentation, d.onboarding, d.training, d.communications, d.controls)).toBe(83.3);
+    // Pinned to a fixed reference date so this doesn't drift once real
+    // calendar time passes a fixture document's reviewDueAt (DOC-3904: 2026-07-25).
+    expect(releaseEnablementReadiness(d.documentation, d.onboarding, d.training, d.communications, d.controls, new Date('2026-07-20'))).toBe(83.3);
   });
 
   it('returns perfect scores for empty portfolios', () => {
