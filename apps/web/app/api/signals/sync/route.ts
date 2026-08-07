@@ -1,0 +1,31 @@
+import { getWorkspaceContext } from '@/lib/workspace-context';
+import { fetchEpaEchoSdwaSignals } from '@/lib/connectors/epa-echo';
+import { fetchUsgsStreamflowSignals } from '@/lib/connectors/usgs-water';
+import { fetchTampaAgingCommercialBuildings } from '@/lib/connectors/tampa-geohub';
+import { upsertExternalSignals } from '@/lib/data/external-signals';
+
+// Tampa Bay coverage area for the free, keyless connectors in the GTM
+// Engineering API Matrix. Extend this list (or make it configurable) before
+// adding paid-tier connectors that need per-workspace credentials.
+const COUNTIES = ['Hillsborough', 'Pinellas', 'Pasco'];
+
+export async function POST() {
+  const { activeWorkspace } = await getWorkspaceContext();
+  if (!activeWorkspace) return Response.json({ error: 'no active workspace' }, { status: 401 });
+  const results = await Promise.allSettled([
+    Promise.all(COUNTIES.map((c) => fetchEpaEchoSdwaSignals('FL', c))).then((r) => r.flat()),
+    fetchUsgsStreamflowSignals('FL'),
+    fetchTampaAgingCommercialBuildings(),
+  ]);
+  const [epaEcho, usgs, tampa] = results;
+  const signals = results.filter((r) => r.status === 'fulfilled').flatMap((r) => (r as PromiseFulfilledResult<Awaited<ReturnType<typeof fetchUsgsStreamflowSignals>>>).value);
+  const written = await upsertExternalSignals(activeWorkspace.id, signals);
+  return Response.json({
+    written,
+    sources: {
+      epa_echo_sdwa: epaEcho.status === 'fulfilled' ? epaEcho.value.length : `error: ${(epaEcho as PromiseRejectedResult).reason}`,
+      usgs_water: usgs.status === 'fulfilled' ? usgs.value.length : `error: ${(usgs as PromiseRejectedResult).reason}`,
+      tampa_geohub: tampa.status === 'fulfilled' ? tampa.value.length : `error: ${(tampa as PromiseRejectedResult).reason}`,
+    },
+  });
+}
