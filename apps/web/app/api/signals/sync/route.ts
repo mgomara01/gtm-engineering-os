@@ -19,13 +19,18 @@ export async function POST() {
   ]);
   const [epaEcho, usgs, tampa] = results;
   const signals = results.filter((r) => r.status === 'fulfilled').flatMap((r) => (r as PromiseFulfilledResult<Awaited<ReturnType<typeof fetchUsgsStreamflowSignals>>>).value);
-  const written = await upsertExternalSignals(activeWorkspace.id, signals);
-  return Response.json({
-    written,
-    sources: {
-      epa_echo_sdwa: epaEcho.status === 'fulfilled' ? epaEcho.value.length : `error: ${(epaEcho as PromiseRejectedResult).reason}`,
-      usgs_water: usgs.status === 'fulfilled' ? usgs.value.length : `error: ${(usgs as PromiseRejectedResult).reason}`,
-      tampa_geohub: tampa.status === 'fulfilled' ? tampa.value.length : `error: ${(tampa as PromiseRejectedResult).reason}`,
-    },
-  });
+  const sources = {
+    epa_echo_sdwa: epaEcho.status === 'fulfilled' ? epaEcho.value.length : `error: ${(epaEcho as PromiseRejectedResult).reason}`,
+    usgs_water: usgs.status === 'fulfilled' ? usgs.value.length : `error: ${(usgs as PromiseRejectedResult).reason}`,
+    tampa_geohub: tampa.status === 'fulfilled' ? tampa.value.length : `error: ${(tampa as PromiseRejectedResult).reason}`,
+  };
+  // Writing to Supabase can fail independently of the fetches above (RLS,
+  // permissions, connectivity) -- surface that instead of letting it crash
+  // the route handler into an opaque, bodyless 500.
+  try {
+    const written = await upsertExternalSignals(activeWorkspace.id, signals);
+    return Response.json({ written, sources });
+  } catch (err) {
+    return Response.json({ error: err instanceof Error ? err.message : String(err), sources }, { status: 500 });
+  }
 }
