@@ -1,0 +1,1 @@
+export interface ExternalSignal{source:string;category:string;externalRef:string;title:string;location:string|null;severity:'critical'|'warning'|'info';detail:Record<string,unknown>;observedAt:string|null;}
