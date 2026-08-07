@@ -1,4 +1,4 @@
-import { BadgeCheck, BookOpenCheck, CloudCog, Network, ClipboardCheck, HardDrive, Code2, Webhook, KeyRound, CreditCard, LifeBuoy, Activity, TrendingUp, AlertTriangle, ServerCog, ToggleLeft, Building2, Database, GitMerge, LayoutDashboard, ListChecks, Settings, Target, Search, Radio, Bot, Gauge, PackageCheck, Workflow, Megaphone, BarChart3, ClipboardList, Plug, ShieldCheck, ShieldAlert, LockKeyhole, Rocket, FlaskConical, UsersRound, BrainCircuit, CheckCircle2 } from 'lucide-react';
+import { BadgeCheck, BookOpenCheck, CloudCog, Network, ClipboardCheck, HardDrive, Code2, Webhook, KeyRound, CreditCard, LifeBuoy, Activity, TrendingUp, AlertTriangle, ServerCog, ToggleLeft, Building2, Database, GitMerge, LayoutDashboard, ListChecks, Settings, Target, Search, Radio, Bot, Gauge, PackageCheck, Workflow, Megaphone, BarChart3, ClipboardList, Plug, ShieldCheck, ShieldAlert, LockKeyhole, Rocket, FlaskConical, UsersRound, BrainCircuit, CheckCircle2, Satellite } from 'lucide-react';
 export const navigation = [
   { label: 'Overview', href: '/', icon: LayoutDashboard },
   { label: 'Implementation', href: '/implementation', icon: ListChecks },
@@ -16,6 +16,7 @@ export const navigation = [
   { label: 'Management', href: '/analytics', icon: LayoutDashboard },
   { label: 'Operating Review', href: '/operating-review', icon: ClipboardList },
   { label: 'Opportunities', href: '/opportunities', icon: Target },
+  { label: 'Data Sources', href: '/admin/data-sources', icon: Satellite },
   { label: 'Integrations', href: '/admin/integrations', icon: Plug },
   { label: 'Integration Marketplace', href: '/admin/integration-marketplace', icon: Plug },
   { label: 'Governance', href: '/admin/governance', icon: ShieldCheck },
