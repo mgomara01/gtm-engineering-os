@@ -40,4 +40,23 @@ describe('signal scoring', () => {
     expect(score).toBe(0);
     expect(tier).toBe('C');
   });
+
+  it('scores a freeze reading as B-tier (burst-pipe emergency risk)', () => {
+    const { score, tier } = scoreExternalSignal({ source: 'tomorrow_weather', detail: { temperature: 29 } });
+    expect(score).toBe(50);
+    expect(tier).toBe('B');
+  });
+
+  it('scores an extreme heat reading lower than a freeze reading (AC-failure risk, less urgent than burst pipes)', () => {
+    const heat = scoreExternalSignal({ source: 'tomorrow_weather', detail: { temperature: 97 } });
+    const freeze = scoreExternalSignal({ source: 'tomorrow_weather', detail: { temperature: 29 } });
+    expect(heat.score).toBeLessThan(freeze.score);
+    expect(heat.tier).toBe('C');
+  });
+
+  it('scores routine weather low (regional context, not a demand trigger)', () => {
+    const { score, tier } = scoreExternalSignal({ source: 'tomorrow_weather', detail: { temperature: 82 } });
+    expect(score).toBe(10);
+    expect(tier).toBe('C');
+  });
 });
