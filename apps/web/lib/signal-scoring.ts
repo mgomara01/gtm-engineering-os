@@ -11,7 +11,11 @@ export interface SignalScore{score:number;tier:'A'|'B'|'C';}
 // backflow/plumbing remediation likelihood, especially at community
 // systems with a serious non-compliance flag; USGS streamflow is regional
 // environmental context only, not an account-level lead -- scored low on
-// purpose. Entity resolution (linking a signal to a specific account or
+// purpose. Tomorrow.io weather is also regional (not account-level), but
+// unlike streamflow it carries a direct demand trigger: freeze conditions
+// drive burst-pipe emergency calls and extreme heat drives AC-failure
+// calls, so those two states score meaningfully higher than routine
+// weather. Entity resolution (linking a signal to a specific account or
 // opportunity) remains a separate, later pass -- this is priority triage
 // over the raw feed, not a finished lead.
 export function scoreExternalSignal(signal:Pick<ExternalSignal,'source'|'detail'>):SignalScore{
@@ -29,6 +33,11 @@ export function scoreExternalSignal(signal:Pick<ExternalSignal,'source'|'detail'
     score=20+(seriousViolator?40:0)+(violation?20:0)+(community?10:0);
   }else if(signal.source==='usgs_water'){
     score=5+(d.value==null?10:0);
+  }else if(signal.source==='tomorrow_weather'){
+    const temp=typeof d.temperature==='number'?d.temperature:null;
+    const freeze=temp!==null&&temp<=32;
+    const extremeHeat=temp!==null&&temp>=95;
+    score=10+(freeze?40:0)+(extremeHeat?25:0);
   }
   score=Math.max(0,Math.min(100,Math.round(score)));
   const tier=score>=70?'A':score>=40?'B':'C';
